@@ -1,10 +1,10 @@
-/* Program from MCA Microcontrollers Lab Manual, Experiment 6
-   16x2 LCD interface with LPC2148; display message "NMIET PUNE".
-   Source: MCA Upto Expt 8 PDF, printed pages 33-35.
-   Function prototypes are added before main; the code's logic and
-   pin mapping follow the manual.
+/* Practical 7: 16x2 LCD interfacing with LPC2148 - display student name.
+   Pin mapping follows Experiment 6 of the MCA manual:
+   LCD D0-D7 = P0.8-P0.15, RS=P0.4, EN=P0.5, RW=P0.6.
+   Display string: SUJAL SONAWANE (14 characters).
 */
 #include <LPC214x.h>
+
 #define LCD_DATA   0x0000FF00
 #define RS         (1 << 4)
 #define EN         (1 << 5)
@@ -20,10 +20,13 @@ int main(void)
 {
     PINSEL0 &= 0x0000C0FF;
     IO0DIR |= 0x0000FF70;
+
     LCD_Init();
-    LCD_String("NMIET PUNE");
+    LCD_String("SUJAL SONAWANE");
+
     while(1);
 }
+
 void delay(unsigned int count)
 {
     unsigned int i, j;
@@ -32,6 +35,7 @@ void delay(unsigned int count)
         for(j = 0; j < 6000; j++);
     }
 }
+
 void LCD_Command(unsigned char cmd)
 {
     IO0CLR = LCD_DATA;
@@ -43,6 +47,7 @@ void LCD_Command(unsigned char cmd)
     IO0CLR = EN;
     delay(2);
 }
+
 void LCD_Data(unsigned char data)
 {
     IO0CLR = LCD_DATA;
@@ -54,14 +59,16 @@ void LCD_Data(unsigned char data)
     IO0CLR = EN;
     delay(2);
 }
+
 void LCD_Init(void)
 {
-    LCD_Command(0x38);
-    LCD_Command(0x0C);
-    LCD_Command(0x06);
-    LCD_Command(0x01);
-    LCD_Command(0x80);
+    LCD_Command(0x38); /* 8-bit mode, 2 lines, 5x7 matrix */
+    LCD_Command(0x0C); /* Display ON, cursor OFF */
+    LCD_Command(0x06); /* Auto increment cursor */
+    LCD_Command(0x01); /* Clear display */
+    LCD_Command(0x80); /* First line, first position */
 }
+
 void LCD_String(char *str)
 {
     while(*str)
