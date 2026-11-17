@@ -1,9 +1,7 @@
-/* Program from MCA Microcontrollers Lab Manual, Experiment 7
-   UART0 Echo Communication on LPC2148.
-   Source: MCA Upto Expt 8 PDF, printed pages 39-40.
-   PLL0_Init prototype is declared before main to avoid an implicit
-   function declaration; register setup and program sequence follow
-   the manual.
+/* Practical 8: UART0 receive and echo a character using LPC2148.
+   Based on Experiment 7 of the MCA manual.
+   Assumptions: 12 MHz crystal, CCLK=60 MHz, PCLK=60 MHz.
+   UART format: 9600 baud, 8 data bits, no parity, 1 stop bit (8-N-1).
 */
 #define PLL0CON (*(volatile unsigned int *)0xE01FC080)
 #define PLL0CFG (*(volatile unsigned int *)0xE01FC084)
@@ -22,40 +20,46 @@ void PLL0_Init(void);
 
 int main(void)
 {
-    char a;
+    unsigned char a;
+
     PLL0_Init();
+
+    /* P0.0 = TXD0 and P0.1 = RXD0 */
     PINSEL0 = (PINSEL0 & ~0x0FU) | 0x05U;
-    U0LCR = 0x83;
+
+    U0LCR = 0x83; /* Enable divisor latch, 8-bit data */
     U0DLM = 0x01;
     U0DLL = 0x87;
-    U0LCR = 0x03;
+    U0LCR = 0x03; /* Disable DLAB: 8-N-1 */
 
     while(1)
     {
         while((U0LSR & 0x01U) == 0)
         {
         }
-        a = (char)U0RBR;
+        a = (unsigned char)U0RBR;
+
         while((U0LSR & 0x20U) == 0)
         {
         }
-        U0THR = (unsigned char)a;
+        U0THR = a;
     }
 }
 
-/* PLL Initialization */
 void PLL0_Init(void)
 {
-    /* Configure PLL0: 12 MHz crystal to 60 MHz CCLK */
+    /* 12 MHz crystal to 60 MHz CCLK */
     PLL0CON = 0x01;
     PLL0CFG = 0x24;
     PLL0FEED = 0xAA;
     PLL0FEED = 0x55;
+
     while((PLL0STAT & (1U << 10)) == 0)
     {
     }
-    PLL0CON = 0x03;
+
+    PLL0CON = 0x03; /* Connect PLL0 */
     PLL0FEED = 0xAA;
     PLL0FEED = 0x55;
-    VPBDIV = 0x01;
+    VPBDIV = 0x01;  /* PCLK = CCLK */
 }
