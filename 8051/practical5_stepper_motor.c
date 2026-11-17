@@ -1,42 +1,37 @@
-/* Practical 5: Clockwise and anticlockwise stepper motor sequence.
-   Target: AT89C51, 11.0592 MHz crystal.
-   P2.0-P2.3 connect to a suitable motor-driver input (e.g. ULN2003).
-   Never connect a motor winding directly to 8051 GPIO pins.
+/* Program A from MCA Microcontrollers Lab Manual, Experiment 4
+   Stepper Motor Interfacing Using Timer 0 Delay.
+   Source: MCA Upto Expt 8 PDF, printed pages 20-21.
+   The printed program runs one sequence only; it does not implement
+   the reverse (anticlockwise) sequence described in the algorithm.
 */
 #include <reg51.h>
-
-unsigned char code step_sequence[4] = {0x01, 0x02, 0x04, 0x08};
-
-void delay_approximately_50ms(void)
+unsigned char step[4] =
 {
-    TMOD = (TMOD & 0xF0) | 0x01; /* Timer 0, 16-bit mode 1 */
+    0x01, /* Step 1 */
+    0x02, /* Step 2 */
+    0x04, /* Step 3 */
+    0x08  /* Step 4 */
+};
+void delay_50ms()
+{
+    TMOD = 0x01;
     TH0 = 0x4C;
-    TL0 = 0x00;                 /* 0xB400 counts ~= 50 ms */
+    TL0 = 0x00;
     TF0 = 0;
     TR0 = 1;
-    while (TF0 == 0);
+    while(TF0 == 0);
     TR0 = 0;
     TF0 = 0;
 }
-
-void main(void)
+void main()
 {
     unsigned char i;
-
-    while (1)
+    while(1)
     {
-        /* One direction */
-        for (i = 0; i < 4; i++)
+        for(i = 0; i < 4; i++)
         {
-            P2 = step_sequence[i];
-            delay_approximately_50ms();
-        }
-
-        /* Reverse sequence: opposite direction */
-        for (i = 4; i > 0; i--)
-        {
-            P2 = step_sequence[i - 1];
-            delay_approximately_50ms();
+            P2 = step[i];
+            delay_50ms();
         }
     }
 }
