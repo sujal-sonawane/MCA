@@ -1,25 +1,33 @@
-/* Practical 2: Hexadecimal counter 00H to FFH using 8051 Port 2
-   Target: AT89C51 / 8051
+/* Program C from MCA Microcontrollers Lab Manual, Experiment 1
+   Display of Hexadecimal Numbers on Port 2.
+   Source: MCA Upto Expt 8 PDF, printed page 4.
 */
 #include <reg51.h>
 
+void delay(void);
+
 void delay(void)
 {
-    volatile unsigned int i, j;
-    for (i = 0; i < 500; i++)
-        for (j = 0; j < 1275; j++);
+    unsigned int i, j;
+    for(i = 0; i < 500; i++)
+    {
+        for(j = 0; j < 1275; j++);
+    }
 }
 
 void main(void)
 {
-    unsigned int value;
-
-    while (1)
+    unsigned char hex;
+    while(1)
     {
-        for (value = 0; value <= 0xFF; value++)
+        /* Display hexadecimal values from 00H to FEH */
+        for(hex = 0x00; hex < 0xFF; hex++)
         {
-            P2 = (unsigned char)value;
+            P2 = hex;
             delay();
         }
+        /* Display the last hexadecimal value (FFH) */
+        P2 = 0xFF;
+        delay();
     }
 }
