@@ -30,3 +30,86 @@ void main(void)
         }
     }
 }
+
+
+
+
+
+
+Program 1: Display digits 0–9 on Common-Cathode 7-Segment Display
+#include <reg51.h>
+
+void delay(void)
+{
+    unsigned int i, j;
+
+    for(i = 0; i < 200; i++)
+    {
+        for(j = 0; j < 1275; j++);
+    }
+}
+
+void main(void)
+{
+    unsigned char digit[10] =
+    {
+        0x3F,   // 0
+        0x06,   // 1
+        0x5B,   // 2
+        0x4F,   // 3
+        0x66,   // 4
+        0x6D,   // 5
+        0x7D,   // 6
+        0x07,   // 7
+        0x7F,   // 8
+        0x6F    // 9
+    };
+
+    unsigned char i;
+
+    while(1)
+    {
+        for(i = 0; i < 10; i++)
+        {
+            P2 = digit[i];
+            delay();
+        }
+    }
+}
+
+
+Program 2: Display characters A–E on Common-Cathode 7-Segment Display
+#include <reg51.h>
+
+void delay(void)
+{
+    unsigned int i, j;
+
+    for(i = 0; i < 200; i++)
+    {
+        for(j = 0; j < 1275; j++);
+    }
+}
+
+void main(void)
+{
+    unsigned char code character[5] =
+    {
+        0x77,   // A
+        0x7C,   // b
+        0x39,   // C
+        0x5E,   // d
+        0x79    // E
+    };
+
+    unsigned char i;
+
+    while(1)
+    {
+        for(i = 0; i < 5; i++)
+        {
+            P2 = character[i];
+            delay();
+        }
+    }
+}
