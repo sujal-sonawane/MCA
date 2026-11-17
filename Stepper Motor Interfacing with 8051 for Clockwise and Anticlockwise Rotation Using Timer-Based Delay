@@ -1,0 +1,50 @@
+
+#include <reg51.h>
+
+// Stepper motor sequence
+unsigned char step[4] =
+{
+    0x01,       // Step 1
+    0x02,       // Step 2
+    0x04,       // Step 3
+    0x08        // Step 4
+};
+
+// Timer 0 delay of approximately 50 ms
+void delay_50ms(void)
+{
+    TMOD = 0x01;       // Timer 0, Mode 1 (16-bit)
+
+    TH0 = 0x4C;        // Load high byte
+    TL0 = 0x00;        // Load low byte
+
+    TF0 = 0;           // Clear overflow flag
+    TR0 = 1;           // Start Timer 0
+
+    while(TF0 == 0);   // Wait for overflow
+
+    TR0 = 0;           // Stop Timer 0
+    TF0 = 0;           // Clear overflow flag
+}
+
+void main(void)
+{
+    unsigned char i;
+
+    while(1)
+    {
+        // Clockwise rotation
+        for(i = 0; i < 4; i++)
+        {
+            P2 = step[i];
+            delay_50ms();
+        }
+
+        // Anticlockwise rotation
+        for(i = 4; i > 0; i--)
+        {
+            P2 = step[i - 1];
+            delay_50ms();
+        }
+    }
+}
