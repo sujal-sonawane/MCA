@@ -1,26 +1,30 @@
-/* Practical 1A: Binary counter using 8051 Port 2
-   Target: AT89C51 / 8051, 11.0592 MHz
-   Connect eight LEDs to P2 through suitable current-limiting resistors.
+/* Program D from MCA Microcontrollers Lab Manual, Experiment 1
+   Port as 8 Bit Counter. Controller: AT89S52 / AT89C51. Port: P2.
+   Source: MCA Upto Expt 8 PDF, printed page 4.
 */
 #include <reg51.h>
 
 void delay(void)
 {
-    volatile unsigned int i, j;
-    for (i = 0; i < 500; i++)
-        for (j = 0; j < 1275; j++);
+    unsigned int i, j;
+    for(i = 0; i < 500; i++)
+    {
+        for(j = 0; j < 1275; j++);
+    }
 }
 
 void main(void)
 {
-    unsigned int count;
-
-    while (1)
+    unsigned char count;
+    while(1)
     {
-        for (count = 0; count <= 255; count++)
+        /* Count from 00H to FFH */
+        for(count = 0x00; count <= 0xFF; count++)
         {
-            P2 = (unsigned char)count;
+            P2 = count;
             delay();
+            if(count == 0xFF)
+                break;
         }
     }
 }
