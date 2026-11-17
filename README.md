@@ -1,49 +1,53 @@
-# MCA Microcontrollers Lab - source codes from the supplied manual
+# MCA Practical Exam Codes - E&TC
 
-**Source of truth:** *MCA Upto Expt 8 (1)(1).pdf*, NMIET E&TC Microcontrollers Lab manual, AY 2026-27. The files below follow the program/code sections printed after the relevant experiments. Only small compile-safety additions are noted explicitly.
+This repository contains the eight practical programs expected for the MCA practical examination, organized for **Keil C51 (8051)** and **Triton IDE (LPC2148)**.
 
-## 8051 / AT89S52 / AT89C51 (Keil C51)
+The supplied NMIET MCA lab manual is used for the experiment approach, register names, I/O port mapping and coding style. Where the exam practical title asks for behavior missing from the printed manual program, the exam-specific source adds that behavior.
 
-| Practical / manual section | Source file |
-|---|---|
-| Experiment 1A - LED flashing (additional program in the manual) | [practical1_led_flashing.c](8051/practical1_led_flashing.c) |
-| Practical 1 - Binary counter / 8-bit Port 2 counter (Experiment 1D) | [practical1_binary_led.c](8051/practical1_binary_led.c) |
-| Practical 1 - BCD counter 00-99 (Experiment 1B) | [practical1_bcd_led.c](8051/practical1_bcd_led.c) |
-| Practical 2 - Hexadecimal counter 00H-FFH (Experiment 1C) | [practical2_hex_led.c](8051/practical2_hex_led.c) |
-| Practical 3 - Common-cathode 7-segment digits 0-9 (Experiment 2E) | [practical3_seven_segment.c](8051/practical3_seven_segment.c) |
-| Practical 3 - 7-segment characters A-F (Experiment 2F; includes extra F) | [practical3_seven_segment_characters.c](8051/practical3_seven_segment_characters.c) |
-| Practical 4 - DAC square wave (Experiment 3A) | [practical4a_dac_square_wave.c](8051/practical4a_dac_square_wave.c) |
-| Practical 4 - DAC triangular wave (Experiment 3B) | [practical4b_dac_triangle_wave.c](8051/practical4b_dac_triangle_wave.c) |
-| Experiment 3C - DAC sine wave (additional waveform in the manual) | [practical4c_dac_sine_wave.c](8051/practical4c_dac_sine_wave.c) |
-| Practical 5 - Stepper motor using Timer 0 (Experiment 4A) | [practical5_stepper_motor.c](8051/practical5_stepper_motor.c) |
+## Exam practical list
 
-## LPC2148 (Triton IDE)
+### 8051 / AT89C51 / AT89S52 - Keil C51
 
-| Practical / manual section | Source file |
-|---|---|
-| Practical 6 - P0.8-P0.15 LED blinking (Experiment 5) | [practical6_led_patterns.c](LPC2148/practical6_led_patterns.c) |
-| Practical 7 - 16x2 LCD, message "NMIET PUNE" (Experiment 6) | [practical7_lcd_student_name.c](LPC2148/practical7_lcd_student_name.c) |
-| Practical 8 - UART0 receive and echo (Experiment 7) | [practical8_uart0_echo.c](LPC2148/practical8_uart0_echo.c) |
+| No. | Practical | Source file(s) |
+|---|---|---|
+| 1 | LED interfacing - Binary and BCD number display | [Binary](8051/practical1_binary_led.c) · [BCD](8051/practical1_bcd_led.c) |
+| 2 | LED interfacing - Hexadecimal display and counter operation | [Hexadecimal](8051/practical2_hex_led.c) · [8-bit counter](8051/practical2_counter_operation.c) |
+| 3 | Common-cathode 7-segment display - 0-9 and A-E | [Combined 0-9 and A-E](8051/practical3_seven_segment.c) · [Letters only](8051/practical3_seven_segment_characters.c) |
+| 4 | DAC waveform generation - any two waveforms, Timer 0, nominal 1 kHz | [Square wave](8051/practical4a_dac_square_wave.c) · [Triangular wave](8051/practical4b_dac_triangle_wave.c) |
+| 5 | Stepper motor - clockwise and anticlockwise using Timer 0 | [CW and ACW](8051/practical5_stepper_motor.c) |
 
-## Important: differences between practical titles and the manual's printed programs
+**Additional reference programs from the lab manual:** [LED flashing](8051/practical1_led_flashing.c) · [DAC sine wave](8051/practical4c_dac_sine_wave.c)
 
-These points are intentionally not silently rewritten; the source code follows the manual:
+### LPC2148 - Triton IDE
 
-1. **7-segment:** the printed code is a single-digit sequence, not a multiplexed two-digit 00-99 display. The manual's digits program declares `digit[9]` but initializes ten values and indexes through 9; the repository uses `digit[10]` so the intended 0-9 program has a valid array.
-2. **DAC:** the manual's square, triangular and sine programs use software-delay loops. They do not use Timer 0 and do not establish a calibrated 1 kHz output. The square-wave file includes `reg51.h` so the 8051 port register is declared.
-3. **Stepper motor:** the printed program applies `01H, 02H, 04H, 08H` repeatedly in one direction. Although the experiment algorithm mentions reversing the sequence, the printed program does not implement anticlockwise rotation.
-4. **LPC2148 LEDs:** the printed program blinks P0.8-P0.15 together (all ON, then all OFF). It does not generate alternate or running patterns.
-5. **LCD:** the manual's message is `NMIET PUNE`; it is not a student-name string. The pin assignments and LCD command sequence follow the manual. Function prototypes are added before `main` to avoid implicit function-declaration issues.
-6. **UART0:** this is Experiment 7 in the supplied PDF. A prototype for `PLL0_Init` is added before `main`. Its PLL setup assumes a 12 MHz crystal and 60 MHz CCLK/PCLK as stated in the manual.
+| No. | Practical | Source file |
+|---|---|---|
+| 6 | LEDs on P0.8-P0.15 - different patterns | [LED patterns](LPC2148/practical6_led_patterns.c) |
+| 7 | 16x2 LCD - display student name | [LCD student name](LPC2148/practical7_lcd_student_name.c) |
+| 8 | UART0 - receive and echo a character | [UART0 echo](LPC2148/practical8_uart0_echo.c) |
 
-The supplied PDF's **Experiment 8** is an ADC0.1 voltage-reading program that displays ADC count and voltage through UART0. It is not the UART0 echo practical listed above, so it has not been substituted for Practical 8.
+## Important differences from the printed manual
 
-## How to use
+These exam-specific programs intentionally satisfy the practical titles you supplied:
 
-- Add only the one practical source file you are building to its Keil/Triton project. Do not add several files containing their own `main()` into one target.
-- 8051 source files use `reg51.h`. The LCD file uses `LPC214x.h`; the UART and LED files access registers directly.
-- Confirm the trainer-board pin wiring and polarity before programming.
-- The stepper motor must use a suitable driver such as ULN2003; do not drive motor windings directly from MCU pins.
-- LPC2148 GPIO is 3.3 V logic. Check the connected LCD/serial adapter's voltage compatibility.
+1. **Practical 3:** The manual's Experiment 2 prints separate single-digit programs and includes F in the character list. The exam source combines 0-9 and A-E in one sequence.
+2. **Practical 4:** The manual's Experiment 3 source programs use software-delay loops. The exam source uses Timer 0 sample delays as requested. The 8051 timer reloads are nominal starting values; actual waveform frequency depends on oscillator frequency, instruction overhead and DAC circuit. Verify the output with a CRO/oscilloscope and adjust timer values for a measured 1 kHz.
+3. **Practical 5:** The manual's Experiment 4 source only rotates in one direction. The exam source runs the sequence forward and then in reverse. The phase sequence is taken from the manual's printed source code (01H, 02H, 04H, 08H).
+4. **Practical 6:** The manual's Experiment 5 source blinks all eight LEDs together. The exam source includes all-ON/all-OFF, alternating 55H/AAH and running LED patterns.
+5. **Practical 7:** The manual's Experiment 6 displays "NMIET PUNE". The exam title asks for student name, so this source displays "SUJAL SONAWANE".
+6. **Practical 8:** UART0 echo follows Experiment 7 in the manual. PLL settings assume a 12 MHz crystal and 60 MHz CCLK/PCLK.
 
-**Verification status:** source files were compared against the uploaded manual and committed to GitHub. They have not been built in Keil/Triton or tested on the physical kits in this session.
+## Hardware and build notes
+
+- Add **one practical source file at a time** to a Keil/Triton project. Each file has its own main function.
+- 8051 timer examples assume an AT89C51/AT89S52-compatible 12-clock core and an 11.0592 MHz crystal.
+- 8051 LED programs use Port 2. Check the actual trainer-board LED wiring and polarity.
+- The 7-segment lookup table assumes common-cathode wiring with P2.0=a through P2.6=g. Confirm your board's segment connections and use suitable current-limiting resistors.
+- DAC practical requires an external 8-bit DAC connected to P1.0-P1.7 and the required output amplifier/circuit. Do not connect the analog output directly to a microcontroller pin.
+- Stepper motor P2.0-P2.3 must connect through a suitable driver such as ULN2003. Never connect motor windings directly to 8051 GPIO pins. Actual clockwise/anticlockwise direction depends on the coil wiring.
+- LPC2148 GPIO uses 3.3 V logic. Check the LCD and serial adapter voltage compatibility. Use a 3.3 V-compatible USB-TTL adapter for UART0.
+- The LPC2148 UART program assumes the board's 12 MHz crystal and the manual's 60 MHz PLL/peripheral-clock setup.
+
+## Verification status
+
+The files have been pushed to the GitHub main branch and checked for presence. They have **not** been compiled in Keil/Triton or tested on your physical development kits in this session. The timer-based DAC frequency must be measured and calibrated on the actual board.
