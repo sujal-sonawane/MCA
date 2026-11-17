@@ -1,0 +1,35 @@
+		/* Program: Display BCD Numbers (00 to 99) on Port 2 */ 
+		 
+		#include <reg51.h> 
+		// Function Prototype 
+		void delay(void); 
+		 
+		void delay(void) 
+		{ 
+				unsigned int i, j; 
+		 
+				for(i = 0; i < 500; i++) 
+				{ 
+						for(j = 0; j < 1275; j++); 
+				} 
+		} 
+		// Main Program  // 
+		void main(void) 
+		{ 
+				unsigned char bcd = 0x00; 
+				while(1) 
+				{ 
+						P2 = bcd;          // Display current BCD value 
+						delay(); 
+						bcd++;             // Increment BCD value 
+						// If lower nibble becomes 0x0A, move to next tens digit 
+						if((bcd & 0x0F) == 0x0A) 
+						{ 
+								bcd += 0x06; 
+						} 
+						// After 99, restart from 00 
+						if(bcd == 0xA0) 
+						{ 
+								bcd = 0x00; 
+						}    } 
+		} 
