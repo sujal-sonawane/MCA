@@ -1,6 +1,5 @@
-/* Program D from MCA Microcontrollers Lab Manual, Experiment 1
-   Port as 8 Bit Counter. Controller: AT89S52 / AT89C51. Port: P2.
-   Source: MCA Upto Expt 8 PDF, printed page 4.
+/* Practical 1A: Binary number display using 8051 Port 2.
+   Based on Experiment 1, MCA lab manual (AT89C51 / AT89S52).
 */
 #include <reg51.h>
 
@@ -15,16 +14,15 @@ void delay(void)
 
 void main(void)
 {
-    unsigned char count;
+    unsigned int count;
+
     while(1)
     {
-        /* Count from 00H to FFH */
+        /* Display binary values from 00H to FFH on eight LEDs. */
         for(count = 0x00; count <= 0xFF; count++)
         {
-            P2 = count;
+            P2 = (unsigned char)count;
             delay();
-            if(count == 0xFF)
-                break;
         }
     }
 }
