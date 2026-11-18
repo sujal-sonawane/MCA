@@ -46,3 +46,33 @@ int main(void)
             show_pattern((unsigned char)(1U << (i - 1)));
     }
 }
+
+
+
+
+
+                                                   OR
+
+#define IO0SET (*(volatile unsigned long *)0xE0028004)
+#define IO0DIR (*(volatile unsigned long *)0xE0028008)
+#define IO0CLR (*(volatile unsigned long *)0xE002800C)
+#define PINSEL0 (*(volatile unsigned long *)0xE002C000)
+void delay(void)
+{
+ unsigned long i;
+ for(i = 0; i < 500000; i++)
+ {
+ }
+}
+int main(void)
+{
+ PINSEL0 = 0x00000000;
+ IO0DIR = 0x0000FF00;
+ while(1)
+ {
+ IO0SET = 0x0000FF00;
+ delay();
+ IO0CLR = 0x0000FF00;
+ delay();
+ }
+}
